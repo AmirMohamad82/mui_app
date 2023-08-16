@@ -1,27 +1,50 @@
+import { Box, Grid, Button } from "@mui/material";
 import NewTask from "../TaskCard/NewTask";
 import TodayDate from "../Today/TodayDate";
+import Typography from "@mui/material/Typography";
+import AddIcon from '@mui/icons-material/Add';
 
 const Table = () => {
   return (
     <>
-      <div className="row container">
-        <div className="col-8 text">
-          <p>
-            Today's Task <br />
-            <span><TodayDate /></span>
-          </p>
-        </div>
-        <div className="col-4 m-auto float-end">
-          <button
-            className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#myModal"
+      <Grid container direction="row">
+        <Grid xs={6} alignItems="center">
+          <Box sx={{ textAlign: "center", mt: "30px" }}>
+            <Typography
+              component="p"
+              sx={{ fontSize: "20px", fontWeight: "bold" }}
+            >
+              Today's Task <br />
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "14px",
+                  color: "#B9B8B8",
+                }}
+              >
+                <TodayDate />
+              </Typography>
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid xs={6} sx={{ textAlign: "center" }}>
+          <Button
+            disabled={false}
+            size="large"
+            startIcon={<AddIcon />}
+            variant="contained"
+            sx={{
+              mt: "35px",
+              bgcolor: "#74A5FA",
+            }}
           >
-            + New Task
-          </button>
-        </div>
-      </div>
-      <div className="modal fade" id="myModal">
+            <Typography component="span" sx={{ color: "#fff" }}>
+              New Task
+            </Typography>
+          </Button>
+        </Grid>
+      </Grid>
+      {/*<div className="modal fade" id="myModal">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
@@ -38,6 +61,7 @@ const Table = () => {
           </div>
         </div>
       </div>
+    */}
     </>
   );
 };

@@ -1,91 +1,104 @@
-import { FaUserAlt } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
-import { PiEnvelopeBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import { GoSignOut } from "react-icons/go";
 import { Success } from "../..";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import EmailIcon from "@mui/icons-material/Email";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const User = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const toggleCollapse = () => setIsOpen(!isOpen);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const logout = () => {
-    Success("You have successfully logged out")
+    Success("You have successfully logged out");
     localStorage.clear();
     navigate("/");
   };
 
   return (
     <>
-      <div style={{ backgroundColor: "#74A1F2" }}>
-        <nav className="navbar navbar-fixed-top">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <span className="navbar-brand">Tasks Manager</span>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ bgcolor: "#74A5FA" }}>
+          <Toolbar>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+              Tasks Manager
+            </Typography>
+            <div>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appBar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appBar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <IconButton
+                      size="large"
+                      aria-label="Email of user"
+                      aria-haspopup="true"
+                      color="inherit"
+                    >
+                      <EmailIcon />
+                    </IconButton>
+                    <Typography component="span" sx={{ flexGrow: 1 }}>
+                      {window.localStorage.getItem("email")}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+                <MenuItem onClick={logout}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <IconButton
+                      size="large"
+                      aria-label="Logout"
+                      aria-haspopup="true"
+                      color="inherit"
+                    >
+                      <LogoutIcon />
+                    </IconButton>
+                    <Typography component="span" sx={{ flexGrow: 1 }}>
+                      Logout
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              </Menu>
             </div>
-            <div className="navbar-header fluid-end">
-              <FaUserAlt
-                style={{ fontSize: "20px", cursor: "pointer" }}
-                title="Profile"
-                onClick={toggleCollapse}
-              />
-            </div>
-          </div>
-        </nav>
-      </div>
-      <div className={`collapse ${isOpen ? "show" : ""}`}>
-        <div className="shadow p-3 mb-3 bg-white rounded">
-          <p>
-            <PiEnvelopeBold style={{ fontSize: "20px" }} />{" "}
-            {window.localStorage.getItem("email")}
-            <GoSignOut
-              style={{
-                color: "red",
-                cursor: "pointer",
-                fontSize: "20px",
-                float: "right",
-              }}
-              title="Log out"
-              data-bs-toggle="modal"
-              data-bs-target="#logout"
-            />
-          </p>
-
-          <div className="modal fade" id="logout">
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                  ></button>
-                </div>
-                <div className="modal-body text-center">
-                  <h4 className="mb-3">Are you sure you want to Logout?</h4>
-                  <button
-                    type="button"
-                    className="btn btn-danger col-3 m-2"
-                    data-bs-dismiss="modal"
-                  >
-                    No
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-success col-3 m-2"
-                    data-bs-dismiss="modal"
-                    onClick={logout}
-                  >
-                    Yes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          </Toolbar>
+        </AppBar>
+      </Box>
     </>
   );
 };
