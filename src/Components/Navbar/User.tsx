@@ -11,10 +11,17 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 const User = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +35,13 @@ const User = () => {
     Success("You have successfully logged out");
     localStorage.clear();
     navigate("/");
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -72,14 +86,14 @@ const User = () => {
                       aria-haspopup="true"
                       color="inherit"
                     >
-                      <EmailIcon />
+                      <EmailIcon color="primary" />
                     </IconButton>
                     <Typography component="span" sx={{ flexGrow: 1 }}>
                       {window.localStorage.getItem("email")}
                     </Typography>
                   </Box>
                 </MenuItem>
-                <MenuItem onClick={logout}>
+                <MenuItem onClick={handleClickOpen}>
                   <Box sx={{ flexGrow: 1 }}>
                     <IconButton
                       size="large"
@@ -87,7 +101,7 @@ const User = () => {
                       aria-haspopup="true"
                       color="inherit"
                     >
-                      <LogoutIcon />
+                      <LogoutIcon color="error" />
                     </IconButton>
                     <Typography component="span" sx={{ flexGrow: 1 }}>
                       Logout
@@ -99,6 +113,35 @@ const User = () => {
           </Toolbar>
         </AppBar>
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClickClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" sx={{ pt: "0", pb: "0", pr: "0" }}>
+          <Box sx={{ textAlign: "right" }}>
+            <IconButton aria-label="close" onClick={handleClickClose}>
+              <CloseIcon fontSize="large" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography variant="h5" sx={{ mt: "10px", mb: "10px" }}>
+            Are you sure you want to Logout?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ textAlign: "center", flexGrow: 1 }}>
+            <Button variant="contained" color="error" onClick={handleClickClose}>
+              No
+            </Button>{" "}
+            <Button variant="contained" color="success" onClick={logout}>
+              Yes
+            </Button>
+          </Box>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

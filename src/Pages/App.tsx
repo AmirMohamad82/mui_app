@@ -35,8 +35,8 @@ const App = () => {
         <Typography
           variant="h3"
           component="div"
+          color= "error"
           sx={{
-            color: "#FF5D39",
             display: "flex",
             justifyContent: "center",
             mt: "10%",
@@ -60,8 +60,8 @@ const App = () => {
         <Typography
           variant="h3"
           component="div"
+          color= "error"
           sx={{
-            color: "#FF5D39",
             display: "flex",
             justifyContent: "center",
             mt: "10%",

@@ -2,7 +2,13 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-const Navbar = ({ value, setValue } : {value:number , setValue: React.Dispatch<React.SetStateAction<number>>}) => {
+const Navbar = ({
+  value,
+  setValue,
+}: {
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -15,6 +21,7 @@ const Navbar = ({ value, setValue } : {value:number , setValue: React.Dispatch<R
           borderColor: "divider",
           width: "100%",
           bgcolor: "background.paper",
+          mt: "10px",
         }}
       >
         <Tabs

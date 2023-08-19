@@ -10,7 +10,7 @@ const CurrentDate = (props: number) => {
       if (difference === 0) {
         return "Right now";
       }
-      return `${difference} seconds ago , ${time.toDateString()}`;
+      return `${Math.floor(difference)} seconds ago , ${time.toDateString()}`;
     } else if (difference < 3600 && difference > 59) {
       return `${Math.floor(
         difference / 60

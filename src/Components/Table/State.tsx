@@ -6,89 +6,116 @@ import {
 } from "../../Features/FeatureTask/TaskSlice";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../Store/hook";
+import Box from "@mui/material/Box";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import { Typography } from "@mui/material";
 
 const State = () => {
   const dispatch = useAppDispatch();
   const openTasks: number = useAppSelector(selectOpenTasks);
   const closedTasks: number = useAppSelector(selectClosedTasks);
   const totalTasks: number = useAppSelector(selectTotalTasks);
-  const [stateIndex, setStateIndex] = useState<number>(
-    Number(window.localStorage.getItem("state"))
-  );
-
-  const handleStateChange = (index: number) => {
-    dispatch(filter(index));
-    window.localStorage.setItem("state", String(index));
-    setStateIndex(index);
-  };
+  const [stateIndex, setStateIndex] = useState<number>(0);
 
   return (
-    <div className="container">
-      <div className="d-flex justify-content-center">
-        <button
-          className={`btn btn-default px-2 mb-2 col size ${
-            stateIndex === 0 ? "text-primary" : "text-gray"
-          }`}
-          onClick={() => handleStateChange(0)}
+    <>
+      <Box sx={{ width: "100%" }}>
+        <BottomNavigation
+          showLabels
+          value={stateIndex}
+          onChange={(event, newValue) => {
+            setStateIndex(newValue);
+            dispatch(filter(newValue));
+          }}
         >
-          All
-          <span
-            className={`px-2 text-white rounded-circle ${
-              0 === stateIndex ? "bg-primary" : "bg-gray"
-            }`}
-          >
-            {totalTasks}
-          </span>
-          <span className="span"></span>
-        </button>
-        <button
-          className={`btn btn-default px-2 mb-2 col size ${
-            stateIndex === 1 ? "text-primary" : "text-gray"
-          }`}
-          onClick={() => handleStateChange(1)}
-        >
-          Open
-          <span
-            className={`px-2 text-white rounded-circle ${
-              1 === stateIndex ? "bg-primary" : "bg-gray"
-            }`}
-          >
-            {openTasks}
-          </span>
-        </button>
-        <button
-          className={`btn btn-default px-2 mb-2 col size ${
-            stateIndex === 2 ? "text-primary" : "text-gray"
-          }`}
-          onClick={() => handleStateChange(2)}
-        >
-          Closed
-          <span
-            className={`px-2 text-white rounded-circle ${
-              2 === stateIndex ? "bg-primary" : "bg-gray"
-            }`}
-          >
-            {closedTasks}
-          </span>
-        </button>
-        <button
-          className={`btn btn-default px-2 mb-2 col size ${
-            stateIndex === 3 ? "text-primary" : "text-gray"
-          }`}
-          onClick={() => handleStateChange(3)}
-        >
-          Archived
-          <span
-            className={`px-2 text-white rounded-circle ${
-              3 === stateIndex ? "bg-primary" : "bg-gray"
-            }`}
-          >
-            0
-          </span>
-        </button>
-      </div>
-      <div className="space"></div>
-    </div>
+          <BottomNavigationAction
+            label={
+              <Typography component="span">
+                All{" "}
+                <Box
+                  component="span"
+                  sx={{
+                    borderRadius: "50%",
+                    p: "4px",
+                    pt: 0,
+                    pb: 0,
+                    bgcolor: `${stateIndex === 0 ? "#1989E2" : "#666666"}`,
+                    color: "#fff",
+                  }}
+                >
+                  {totalTasks}
+                </Box>
+              </Typography>
+            }
+            sx={{ mt: "10px", mb: "10px" }}
+          />
+          <BottomNavigationAction
+            label={
+              <Typography component="span">
+                Open{" "}
+                <Box
+                  component="span"
+                  sx={{
+                    borderRadius: "50%",
+                    p: "4px",
+                    pt: 0,
+                    pb: 0,
+                    bgcolor: `${stateIndex === 1 ? "#1989E2" : "#666666"}`,
+                    color: "#fff",
+                  }}
+                >
+                  {openTasks}
+                </Box>
+              </Typography>
+            }
+            sx={{ mt: "10px", mb: "10px" }}
+          />
+          <BottomNavigationAction
+            label={
+              <Typography component="span">
+                Close{" "}
+                <Box
+                  component="span"
+                  sx={{
+                    borderRadius: "50%",
+                    p: "4px",
+                    pt: 0,
+                    pb: 0,
+                    bgcolor: `${stateIndex === 2 ? "#1989E2" : "#666666"}`,
+                    color: "#fff",
+                  }}
+                >
+                  {closedTasks}
+                </Box>
+              </Typography>
+            }
+            sx={{ mt: "10px", mb: "10px" }}
+          />
+          <BottomNavigationAction
+            label={
+              <Typography component="span">
+                Archived{" "}
+                <Box
+                  component="span"
+                  sx={{
+                    borderRadius: "50%",
+                    p: "4px",
+                    pt: 0,
+                    pb: 0,
+                    bgcolor: `${stateIndex === 3 ? "#1989E2" : "#666666"}`,
+                    color: "#fff",
+                  }}
+                >
+                  0
+                </Box>
+              </Typography>
+            }
+            sx={{ mt: "10px", mb: "10px" }}
+          />
+        </BottomNavigation>
+      </Box>
+    </>
   );
 };
 

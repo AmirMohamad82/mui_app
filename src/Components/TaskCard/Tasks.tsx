@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ClosedTasks, OpenTasks } from "../../Features/FeatureTask/TaskSlice";
 import Task from "./Task";
 import { useAppSelector } from "./../../Store/hook";
+import { Box, Typography } from "@mui/material";
 
 interface TaskType {
   title: string;
@@ -43,7 +44,14 @@ const Tasks = () => {
             ))}
         </>
       ) : (
-        <div className="text-danger text-center h1">No tasks to show!</div>
+        <Box component="div" sx={{ textAlign: "center" }}>
+          <Typography
+            component="span"
+            sx={{ color: "error", fontSize: "20px" }}
+          >
+            No tasks to show!!
+          </Typography>
+        </Box>
       )}
     </>
   );
