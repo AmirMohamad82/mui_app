@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { BiTrash } from "react-icons/bi";
 import i3 from "./../../Images/images (1).jpg";
 import i4 from "./../../Images/images (2).jpg";
 import i1 from "./../../Images/download.jpg";
@@ -10,7 +9,27 @@ import {
   updateTask,
 } from "../../Features/FeatureTask/TaskSlice";
 import { Error, Success } from "../..";
-import { useAppDispatch } from "./../../Store/hook"
+import { useAppDispatch } from "./../../Store/hook";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogActions from "@mui/material/DialogActions";
 
 interface TaskType {
   task: {
@@ -27,21 +46,25 @@ interface TaskType {
 const Task = ({ task }: TaskType) => {
   const dispatch = useAppDispatch();
   const [finish, setFinish] = useState<boolean>(task.done);
-  let dv: string = "dv";
-  let Class: string = "text-dark ";
   let tasks: string = "task";
-  const people: string[] = [`${i3}`, `${i1}`, `${i4}`];
-  const owner: number = Number(window.localStorage.getItem("id"));
+  const people: string[] = [
+    `${i3}`,
+    `${i1}`,
+    `${i4}`,
+    `${i3}`,
+    `${i1}`,
+    `${i4}`,
+    `${i3}`,
+    `${i1}`,
+    `${i4}`,
+  ];
+  const [open, setOpen] = useState<boolean>(false);
 
-  const img = (index: number, item: string) => {
-    let max = 2;
-    return index > max ? (
-      <div className="more">
-        <span className="four">+4</span>
-      </div>
-    ) : (
-      <img src={item} alt="" />
-    );
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickClose = () => {
+    setOpen(false);
   };
 
   const deleteTask = async () => {
@@ -86,128 +109,120 @@ const Task = ({ task }: TaskType) => {
   };
 
   return (
-    <div className={tasks + `${finish ? " end" : ""}`} id={String(task.id)}>
-      <section>
-        <div className="row">
-          <div className="col-7">
-            <p>
-              <span
-                className={
-                  Class + `${finish ? "text-decoration-line-through" : ""}`
-                }
-              >
-                {task?.title}
-              </span>
-              <br />
-              <span className="text-gray">{task?.description}</span>
-            </p>
-          </div>
-          <div className="col-5">
-            <div className="form-check">
-              <BiTrash
-                style={{
-                  color: "red",
-                  cursor: "pointer",
-                  fontSize: "20px",
-                  marginTop: "12px",
-                  marginRight: "10px",
-                  float: "right",
-                }}
-                data-bs-toggle="modal"
-                data-bs-target="#delete"
-                onClick={() => {
-                  window.localStorage.setItem(
-                    "taskUserID",
-                    String(task.userId)
-                  );
-                  window.localStorage.setItem("taskID", String(task.id));
-                }}
-                title="Delete Task"
-              />
-              <div onClick={checked} style={{ height: "40px" }}>
-                {finish ? (
-                  owner === task.id ? (
-                    <input
-                      className="form-check-input rounded-circle float-end me-4 mt-3"
-                      style={{ transform: "scale(1.5)", cursor: "pointer" }}
-                      type="checkbox"
+    <>
+      <Box
+        component="div"
+        className={tasks + `${finish ? " end" : ""}`}
+        id={String(task.id)}
+      >
+        <Grid container spacing={0}>
+          <Box component="section">
+            <Box component="div">
+              <Stack component="div" direction="row">
+                <Grid xs={7}>
+                  <Box
+                    component={`${finish ? "s" : "span"}`}
+                    sx={{
+                      color: "#000",
+                      fontWeight: "600",
+                      fontSize: "18px",
+                      textAlign: "left",
+                    }}
+                  >
+                    {task?.title}
+                  </Box>
+                  <br />
+                  <Box
+                    component="span"
+                    sx={{ color: "#666666", fontSize: "16px" }}
+                  >
+                    {task?.description}
+                  </Box>
+                </Grid>
+                <Grid xs={5} textAlign={"right"}>
+                  <Box component="span">
+                    <Checkbox
+                      checked={finish}
+                      icon={<RadioButtonUncheckedIcon />}
+                      checkedIcon={<CheckCircleIcon />}
                       onClick={checked}
-                      checked
+                      sx={{
+                        "& .MuiSvgIcon-root": { fontSize: 28 },
+                      }}
                     />
-                  ) : (
-                    <input
-                      className="form-check-input rounded-circle float-end me-4 mt-3 dis"
-                      style={{ transform: "scale(1.5)", cursor: "pointer" }}
-                      type="checkbox"
-                      checked
-                      disabled
+                    <Button
+                      color="error"
+                      sx={{
+                        "& .MuiSvgIcon-root": { fontSize: 30 },
+                      }}
+                      startIcon={<DeleteOutlineIcon />}
+                      onClick={() => {
+                        window.localStorage.setItem(
+                          "taskUserID",
+                          String(task.userId)
+                        );
+                        window.localStorage.setItem("taskID", String(task.id));
+                        handleClickOpen();
+                      }}
                     />
-                  )
-                ) : owner === task.id ? (
-                  <input
-                    className="form-check-input rounded-circle float-end me-4 mt-3"
-                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
-                    type="checkbox"
-                    onClick={checked}
-                  />
-                ) : (
-                  <input
-                    className="form-check-input rounded-circle float-end me-4 mt-3 dis"
-                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
-                    type="checkbox"
-                    disabled
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="date col-7">{Date(task.date)}</div>
-          <div className="people tdr col-5">
-            {people?.map((item, index) => (
-              <div
-                className={dv + `${index + 1}`}
-                key={Math.floor(Math.random() * 10000)}
-              >
-                {img(index, item)}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <div className="modal fade" id="delete">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div className="modal-body text-center">
-              <p className="mb-3 h4">Are you sure you want to delete task?</p>
-              <button
-                type="button"
-                className="btn btn-danger col-3 m-2"
-                data-bs-dismiss="modal"
-              >
-                No
-              </button>
-              <button
-                type="button"
-                className="btn btn-success col-3 m-2"
-                data-bs-dismiss="modal"
-                onClick={deleteTask}
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  </Box>
+                </Grid>
+              </Stack>
+              <Divider variant="middle" sx={{ m: 2 }} />
+              <Stack component="div" direction="row">
+                <Grid xs={7}>
+                  <Box component="div" className="date">
+                    {Date(task.date)}
+                  </Box>
+                </Grid>
+                <Grid xs={5} textAlign={"right"}>
+                  <Box component="span">
+                    <AvatarGroup max={4}>
+                      {people.map((item, index) => (
+                        <Avatar alt="people" src={item} key={index} />
+                      ))}
+                    </AvatarGroup>
+                  </Box>
+                </Grid>
+              </Stack>
+            </Box>
+          </Box>
+        </Grid>
+      </Box>
+      <Dialog
+        open={open}
+        onClose={handleClickClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" sx={{ pt: "0", pb: "0", pr: "0" }}>
+          <Box sx={{ textAlign: "right" }}>
+            <IconButton aria-label="close" onClick={handleClickClose}>
+              <CloseIcon fontSize="large" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography variant="h5" sx={{ mt: "10px", mb: "10px" }}>
+            Are you sure you want to delete tasks?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ textAlign: "center", flexGrow: 1 }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleClickClose}
+            >
+              No
+            </Button>{" "}
+            <Button variant="contained" color="success" onClick={deleteTask}>
+              Yes
+            </Button>
+          </Box>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
