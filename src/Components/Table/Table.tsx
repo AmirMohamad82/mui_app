@@ -82,7 +82,7 @@ const Table = () => {
           </Grid>
         </DialogTitle>
         <DialogContent dividers>
-          <NewTask Close={handleClose} />
+          <NewTask Close={handleClose} Open={handleClickOpen}/>
         </DialogContent>
       </Dialog>
     </>

@@ -2,8 +2,19 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import NavbarHome from "../Components/Navbar/NavbarHome";
 import axios from "axios";
-import { HiEyeOff, HiEye } from "react-icons/hi";
 import { Error } from "..";
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import img from "./../Images/OIP.jpg";
 
 interface SignUpType {
   email: string;
@@ -17,11 +28,20 @@ const SignUp = () => {
     password: "",
     repeatPassword: "",
   });
-  const [typeOne, setTypeOne] = useState<string>("password");
-  const [typeTwo, setTypeTwo] = useState<string>("password");
-  const [eyeOne, setEyeOne] = useState<boolean>(false);
-  const [eyeTwo, setEyeTwo] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleClickShowRepeatPassword = () =>
+    setShowRepeatPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     if (window.localStorage.getItem("token")) {
@@ -29,11 +49,11 @@ const SignUp = () => {
     }
   }, [navigate]);
 
-  const onSubmit = (e : FormEvent<HTMLFormElement>) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (signUp.password !== signUp.repeatPassword) {
-      Error("The password entered does not match its repetition")
+      Error("The password entered does not match its repetition");
       return;
     }
 
@@ -54,114 +74,122 @@ const SignUp = () => {
         navigate("/app");
       })
       .catch((error) => {
-        Error(error.response.data)
+        Error(error.response.data);
       });
-  };
-
-  const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignUp({
-      ...signUp,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
     <>
       <NavbarHome index={3} />
-      <div className="container mt-5">
-        <p className="mb-3 h2 col-12 text-center">Sign Up</p>
-        <p className="m-3 mb-2">
-          Please fill in this form to create an account.
-        </p>
-        <form onSubmit={onSubmit}>
-          <div className="form-group input-group">
-            <input
+      <Box component="div" sx={{ mt: 1 }}>
+        <Box component="div" sx={{ textAlign: "center" }}>
+          <Box component="img" src={img} alt="welcome" sx={{ width: "30%" }} />
+        </Box>
+        <Box component="div" sx={{ textAlign: "left", ml: "12.5%" }}>
+          <Box component="p">
+            Please fill in this form to create an account.
+          </Box>
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            textAlign: "center",
+            "& .MuiTextField-root": { mt: 1, mb: 2, width: "75%" },
+          }}
+          noValidate
+          autoComplete="off"
+          onSubmit={submitHandler}
+        >
+          <Box component="div">
+            <TextField
+              label="Email"
               type="email"
-              className="form-control m-2 rounded-3"
-              placeholder="Email"
+              multiline
               required
-              name="email"
-              onChange={change}
-            />
-          </div>
-          <div className="form-group input-group">
-            <input
-              type={typeOne}
-              className="form-control m-2 me-0 rounded-3 rounded-end-0"
-              placeholder="Password"
-              name="password"
-              required
-              onChange={change}
-            />
-            <button
-              className="btn btn-secondary m-2 rounded-3 ms-0 rounded-start-0"
-              type="button"
-              onClick={() => {
-                if (typeOne === "password") {
-                  setTypeOne("text");
-                  setEyeOne(true);
-                } else {
-                  setTypeOne("password");
-                  setEyeOne(false);
-                }
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setSignUp({ ...signUp, email: event.target.value });
               }}
-            >
-              {eyeOne ? (
-                <HiEyeOff style={{ fontSize: "20px" }} />
-              ) : (
-                <HiEye style={{ fontSize: "20px" }} />
-              )}
-            </button>
-          </div>
-          <div className="form-group input-group">
-            <input
-              type={typeTwo}
-              className="form-control m-2 me-0 rounded-3 rounded-end-0"
-              placeholder="Repeat Password"
-              name="repeatPassword"
-              required
-              onChange={change}
             />
-            <button
-              className="btn btn-secondary m-2 rounded-3 ms-0 rounded-start-0"
-              type="button"
-              onClick={() => {
-                if (typeTwo === "password") {
-                  setTypeTwo("text");
-                  setEyeTwo(true);
-                } else {
-                  setTypeTwo("password");
-                  setEyeTwo(false);
-                }
+            <FormControl
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setSignUp({ ...signUp, password: event.target.value });
               }}
+              required
+              sx={{
+                textAlign: "center",
+                mb: 2,
+                width: "75%",
+              }}
+              variant="outlined"
             >
-              {eyeTwo ? (
-                <HiEyeOff style={{ fontSize: "20px" }} />
-              ) : (
-                <HiEye style={{ fontSize: "20px" }} />
-              )}
-            </button>
-          </div>
-          <p className="m-3">
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+            <FormControl
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setSignUp({ ...signUp, repeatPassword: event.target.value });
+              }}
+              required
+              sx={{
+                textAlign: "center",
+                mb: 2,
+                width: "75%",
+              }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="repeatPassword">Repeat password</InputLabel>
+              <OutlinedInput
+                id="repeatPassword"
+                type={showRepeatPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowRepeatPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="repeatPassword"
+              />
+            </FormControl>
+          </Box>
+          <Box component="p">
             By creating an account you agree to our{" "}
-            <a href="/#" className="text-primary">
-              Terms & Privacy
-            </a>
-            .
-          </p>
-          <div className="text-center">
-            <input
-              type="submit"
-              value="Sign Up"
-              className="btn btn-success m-2 rounded-3"
-            />
-            <Link to="/">
-              <button className="btn btn-danger m-2 rounded-3">Cancel</button>
-            </Link>
-          </div>
-        </form>
-      </div>
-
+            <Link to="/#">Terms & Privacy</Link>.
+          </Box>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ mr: 2 }}
+            onClick={() => navigate("/")}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" color="success">
+            signUp
+          </Button>
+        </Box>
+      </Box>
       <Outlet />
     </>
   );

@@ -8,7 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Dayjs } from "dayjs";
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
 
 interface TaskType {
   title: string;
@@ -17,7 +17,7 @@ interface TaskType {
   done: boolean;
 }
 
-const NewTask = ({ Close }: { Close: () => void }) => {
+const NewTask = ({ Close, Open }: { Close: () => void; Open: () => void }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>();
@@ -41,6 +41,7 @@ const NewTask = ({ Close }: { Close: () => void }) => {
     console.log("test");
     if (!title && !description && !date) {
       Warning("Please fill out the form correctly");
+      Open()
       return;
     }
 

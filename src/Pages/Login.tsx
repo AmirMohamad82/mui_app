@@ -1,10 +1,22 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import NavbarHome from "../Components/Navbar/NavbarHome";
 import { fetchLogin } from "../Features/FeatureLogin/LoginSlice";
-import { HiEyeOff, HiEye } from "react-icons/hi";
 import { FormEvent, useEffect, useState } from "react";
 import { useAppDispatch } from "./../Store/hook";
 import { Error } from "..";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import img from "./../Images/2018-welcome-blue-black.jpg";
+import {
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import LoginIcon from "@mui/icons-material/Login";
 
 interface UserType {
   email: string;
@@ -18,8 +30,15 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const [type, setType] = useState<string>("password");
-  const [eye, setEye] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     if (window.localStorage.getItem("token")) {
@@ -27,7 +46,7 @@ const Login = () => {
     }
   }, [navigate]);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(
       fetchLogin({
@@ -42,70 +61,78 @@ const Login = () => {
     );
   };
 
-  const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...User, [e.target.name]: e.target.value });
-  };
-
-  const toggleEye = () => {
-    if (type === "password") {
-      setType("text");
-      setEye(true);
-    } else {
-      setType("password");
-      setEye(false);
-    }
-  };
-
   return (
     <>
       <NavbarHome index={2} />
-      <div className="container mt-5">
-        <p className="h1 mb-3 col-12 text-center">Welcome</p>
-        <form onSubmit={onSubmit}>
-          <div className="form-group input-group">
-            <input
+      <Box component="div" sx={{ mt: 5 }}>
+        <Box component="div" sx={{ textAlign: "center" }}>
+          <Box component="img" src={img} alt="welcome" sx={{ width: "40%" }} />
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            textAlign: "center",
+            "& .MuiTextField-root": { mt: 5, mb: 2, width: "75%" },
+          }}
+          noValidate
+          autoComplete="off"
+          onSubmit={submitHandler}
+        >
+          <Box component="div">
+            <TextField
+              label="Email"
               type="email"
-              className="form-control m-2 rounded-3"
-              placeholder="Email"
-              name="email"
+              multiline
               required
-              onChange={change}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setUser({ ...User, email: event.target.value });
+              }}
             />
-          </div>
-          <div className="form-group input-group">
-            <input
-              type={type}
-              className="form-control m-2 me-0 rounded-3 rounded-end-0"
-              placeholder="Password"
-              name="password"
+            <FormControl
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setUser({ ...User, password: event.target.value });
+              }}
               required
-              onChange={change}
-            />
-            <button
-              className="btn btn-secondary m-2 rounded-3 ms-0 rounded-start-0"
-              type="button"
-              onClick={toggleEye}
+              sx={{
+                textAlign: "center",
+                mb: 2,
+                width: "75%",
+              }}
+              variant="outlined"
             >
-              {eye ? (
-                <HiEyeOff style={{ fontSize: "20px" }} />
-              ) : (
-                <HiEye style={{ fontSize: "20px" }} />
-              )}
-            </button>
-          </div>
-          <div className="text-center">
-            <input
-              type="submit"
-              value="Login"
-              className="btn btn-success m-2 rounded-3"
-            />
-
-            <Link to="/">
-              <button className="btn btn-danger m-2 rounded-3">Cancel</button>
-            </Link>
-          </div>
-        </form>
-      </div>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+          </Box>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ mr: 2 }}
+            onClick={() => navigate("/")}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" startIcon={<LoginIcon />}>
+            Login
+          </Button>
+        </Box>
+      </Box>
       <Outlet />
     </>
   );
